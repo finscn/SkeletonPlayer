@@ -127,19 +127,20 @@ var SKP = SKP || {
             return a + (b - a) * this.tweenFunction(t);
         },
         getTweenAngle: function(a, b, t, tweenRotate) {
-            var d = b - a;
-            d = d % 360;
-            d += (d < 0 ? -1 : 1) * (360 * tweenRotate)
-                // if (d == 0) {
-                //     return a;
-                // }
-                // if (spin < 0) {
-                //     d = d - 360;
-                // } else {
-                //     d = d + 360;
-                // }
-                // d = d % 360;
-                // console.log(a, b, d, "--", spin,b-a)
+            var d = b + 360 * tweenRotate - a;
+            // d = d % 360;
+            // d += (d < 0 ? -1 : 1) * (360 * tweenRotate);
+
+            // if (d == 0) {
+            //     return a;
+            // }
+            // if (spin < 0) {
+            //     d = d - 360;
+            // } else {
+            //     d = d + 360;
+            // }
+            // d = d % 360;
+            // console.log(a, b, d, "--", spin,b-a)
             var ta = (a + d * this.tweenFunction(t));
             // console.log(a, b, t, ta)
             return ta;
