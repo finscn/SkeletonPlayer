@@ -15,15 +15,9 @@ var Sprite = Sprite || {};
         constructor: Frame,
 
         duration: null,
-
-        matrix: null,
-        alpha: 1,
         imgName: null,
-
-        imgInfo: 0,
-        img: null,
-        iw: 0,
-        ih: 0,
+        alpha: 1,
+        matrix: null,
 
         startTime: null,
         endTime: null,
@@ -48,10 +42,6 @@ var Sprite = Sprite || {};
         },
 
         initPiece: function(p) {
-            p.x = p.x || 0;
-            p.y = p.y || 0;
-            p.w = p.w || 0;
-            p.h = p.h || 0;
             p.alpha = p.alpha || p.alpha === 0 ? p.alpha : 1;
             p.imgInfo = this.animation.getImgInfo(p.imgName);
             p.img = p.imgInfo.img;
@@ -61,7 +51,10 @@ var Sprite = Sprite || {};
             p.ih = p.imgInfo.h;
             p.ox = p.ox || 0;
             p.oy = p.oy || 0;
-
+            p.x = p.x || 0;
+            p.y = p.y || 0;
+            p.w = p.w || 0;
+            p.h = p.h || 0;
         },
 
         renderPieces: function(context, x, y) {
@@ -70,13 +63,19 @@ var Sprite = Sprite || {};
                 this.renderPiece(context, p, x, y);
             }
         },
+
         renderPiece: function(context, p, x, y) {
-            context.save();
             context.globalAlpha = p.alpha;
             var m = p.matrix;
-            context.transform(m.a, m.b, m.c, m.d, m.tx + x, m.ty + y);
-            context.drawImage(p.img, p.ix, p.iy, p.iw, p.ih, p.ox, p.oy, p.iw, p.ih);
-            context.restore();
+            if (m) {
+                context.save();
+                context.transform(m.a, m.b, m.c, m.d, m.tx + x, m.ty + y);
+                context.drawImage(p.img, p.ix, p.iy, p.iw, p.ih, p.ox, p.oy, p.iw, p.ih);
+                context.restore();
+            } else {
+                context.drawImage(p.img, p.ix, p.iy, p.iw, p.ih, x + p.ox, y + p.oy, p.iw, p.ih);
+            }
+            context.globalAlpha = 1;
         },
         renderSelf: function(context, x, y) {
             this.renderPiece(context, this, x, y);
