@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -29,10 +29,10 @@ var SKP = SKP || {};
                     "duration",
                     "event",
                     "sound",
-                    "tweenEasing",
                     "tweenRotate",
                 ]);
                 this.setTransform(this.rawData.transform);
+                this.setTweenEasing(this.rawData.tweenEasing);
                 this.setTweenCurve(this.rawData.curve);
             }
 
@@ -70,4 +70,4 @@ var SKP = SKP || {};
 
     exports.BoneFrame = BoneFrame;
 
-}(SKP))
+}(Dragons))

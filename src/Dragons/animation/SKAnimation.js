@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -17,7 +17,7 @@ var SKP = SKP || {};
     var BoneFrame = exports.BoneFrame;
     var SlotFrame = exports.SlotFrame;
 
-    var Animation = GT.Class.create({
+    var SKAnimation = GT.Class.create({
         superclass: BaseElement,
 
         name: null, // 动画名称
@@ -121,27 +121,91 @@ var SKP = SKP || {};
 
         renderFrame: function(context, frame, x, y) {
 
-            var img = frame.skin.img;
+            var img = frame.imgInfo.img;
 
             // if (frame.matrix) {
             context.save();
 
             var matrix = frame.matrix;
 
-            context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx + x, matrix.ty + y);
+            context.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx + x, matrix.ty + y);
+            // context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx + x, matrix.ty + y);
 
-            // context.globalAlpha = 0.5;
+            context.globalAlpha = frame.alpha;
             context.drawImage(img, -img.width / 2, -img.height / 2);
-            // context.globalAlpha = 1;
+            context.globalAlpha = 1;
 
             context.restore();
 
-            animation.strokePoly(context, frame.oobb, "red", x, y);
+            this.strokePoly(context, frame.oobb, "red", x, y);
 
+        },
+
+        getAnimationData: function(duration, FPS, invert) {
+            var frameCount = FPS * duration / 1000;
+            var timeStep = duration / frameCount;
+            var frameStep = this.duration / frameCount;
+            var frameIndex = 0,
+                time = 0;
+            var frames = [];
+            for (var i = 0; i < frameCount; i++) {
+                this.prepareFrame(frameIndex);
+                var frame = {
+                    duration: timeStep,
+                    pieces: []
+                };
+
+                var minX = Infinity,
+                    maxX = -Infinity;
+                var minY = Infinity,
+                    maxY = -Infinity;
+                this.slots.forEach(function(slot) {
+                    var slotFrame = slot.getPlayFrame(frameIndex);
+                    var piece = {
+                        imgName: slotFrame.imgName,
+                        matrix: slotFrame.matrix,
+                        alpha: slotFrame.alpha,
+                        ox: slotFrame.ox,
+                        oy: slotFrame.oy,
+                        oobb: slotFrame.oobb,
+                    };
+                    piece.oobb.forEach(function(p) {
+                        if (p[0] < minX) {
+                            minX = p[0];
+                        } else if (p[0] > maxX) {
+                            maxX = p[0];
+                        }
+                        if (p[1] < minY) {
+                            minY = p[1];
+                        } else if (p[1] > maxY) {
+                            maxY = p[1];
+                        }
+                    });
+                    // console.log(piece.matrix);
+                    frame.pieces.push(piece);
+                });
+                frame.aabb = [
+                    minX, minY, maxX, maxY
+                ];
+                frames.push(frame);
+                time += timeStep;
+                frameIndex += frameStep;
+            }
+
+            if (invert) {
+                for (var i = frames.length - 2; i > 0; i--) {
+                    frames.push(frames[i]);
+                }
+            }
+            var animation = {
+                framesData: frames,
+                loop: this.playTimes === 0 ? true : this.playTimes - 1,
+            };
+            return animation;
         }
 
     });
 
-    exports.Animation = Animation;
+    exports.SKAnimation = SKAnimation;
 
-}(SKP))
+}(Dragons))

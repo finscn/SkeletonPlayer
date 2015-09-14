@@ -76,34 +76,34 @@
             "js/lib/CUI.js/widget/ScrollArea.js",
 
 
-            "js/lib/Sprite/Sprite.js",
-            "js/lib/Sprite/Animation.js",
-            "js/lib/Sprite/Frame.js",
+
 
 
             "js/base/DefaultGame.js",
             "js/base/gesture.js",
 
 
+"../src/Dragons/Matrix.js",
+"../src/Dragons/bezier-easing.js",
+"../src/Dragons/BaseElement.js",
+"../src/Dragons/Composite.js",
+"../src/Dragons/DisplaySkin.js",
+"../src/Dragons/SkinSet.js",
 
-"../src/Matrix.js",
-"../src/BaseElement.js",
-"../src/Composite.js",
-"../src/DisplaySkin.js",
+"../src/Dragons/animation/SlotFrame.js",
+"../src/Dragons/animation/BoneFrame.js",
+"../src/Dragons/animation/MainFrame.js",
+"../src/Dragons/animation/Slot.js",
+"../src/Dragons/animation/Bone.js",
+"../src/Dragons/animation/SKAnimation.js",
 
-"../src/skeleton/BaseSkinSet.js",
-"../src/skeleton/BaseSlot.js",
-"../src/skeleton/BaseBone.js",
+"../src/Dragons/skeleton/BaseSlot.js",
+"../src/Dragons/skeleton/BaseBone.js",
+"../src/Dragons/skeleton/Skeleton.js",
 
-"../src/skeleton/animation/SlotFrame.js",
-"../src/skeleton/animation/BoneFrame.js",
-"../src/skeleton/animation/MainFrame.js",
-"../src/skeleton/animation/Slot.js",
-"../src/skeleton/animation/Bone.js",
-"../src/skeleton/animation/Animation.js",
-
-"../src/skeleton/Skeleton.js",
-
+"../src/Sprite/Sprite.js",
+"../src/Sprite/Frame.js",
+"../src/Sprite/Animation.js",
 
             "js/anim/Robot.js",
             "js/LoadingScene.js",

@@ -246,6 +246,15 @@ var DefaultGame = GT.Class.create({
                 }
             }
 
+            if (this.scene.handlePan) {
+                if (pan) {
+                    this.scene.handlePan(pan.dx, pan.dy, pan.x, pan.y, pan.sx, pan.sy, now);
+                    TouchInfo.firstPan.dx = 0;
+                    TouchInfo.firstPan.dy = 0;
+                    TouchInfo.firstPan = null;
+                }
+            }
+
             if (this.scene.handleSwipe) {
                 if (swipe) {
                     // for (var id in swipe) {
@@ -260,14 +269,6 @@ var DefaultGame = GT.Class.create({
                 }
             }
 
-            if (this.scene.handlePan) {
-                if (pan) {
-                    this.scene.handlePan(pan.dx, pan.dy, pan.x, pan.y, pan.sx, pan.sy, now);
-                    TouchInfo.firstPan.dx = 0;
-                    TouchInfo.firstPan.dy = 0;
-                    TouchInfo.firstPan = null;
-                }
-            }
 
             if (this.scene.handleEnd) {
                 if (end) {

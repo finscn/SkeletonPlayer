@@ -23,25 +23,17 @@ var PlayScene = GT.Class.create({
         var data = DragonBonesData["Robot"];
 
         var armature = data.armature[0];
-        this.skeleton = new SKP.Skeleton({
+        this.skeleton = new Dragons.Skeleton({
             rawData: armature
         });
         this.skeleton.init();
 
-        window.skeleton = this.skeleton;
-        window.animation = this.skeleton.animationMap["Run"];
-        // window.animation = this.skeleton.animationMap["Walk"];
+        var anim = this.skeleton.animationMap["Run"];
+        var animData = anim.getAnimationData(1500, 60);
+        this.anim = new Sprite.Animation(animData)
+        this.anim.init();
+        this.anim.start();
 
-        this.frameIndex = 0;
-        this.updateFrames();
-        // var frameIndex = 0;
-        // animation.prepareFrame(frameIndex);
-        // this.frames = [];
-        // animation.slots.forEach(function(slot) {
-        //     var frame = slot.getPlayFrame(frameIndex);
-        //     // console.log(frame.matrix);
-        //     Me.frames.push(frame);
-        // });
     },
 
 
@@ -66,51 +58,23 @@ var PlayScene = GT.Class.create({
     cooldown: 0,
     update: function(timeStep, now) {
         var Me = this;
-
+        this.anim.update(timeStep, now);
         // if (this.cooldown <= -1) {
-            this.cooldown = 0;
-            this.frameIndex += 0.2;
-            this.updateFrames();
+
+        // this.cooldown = 0;
+        // // this.frameIndex += 0.2;
+        // this.frameIndex += this.anim.duration / 50;
+        // this.updateFrames();
+
         // } else {
         //     this.cooldown--;
         // }
     },
 
-    updateFrames: function() {
-        var Me = this;
-        var frameIndex = (this.frameIndex) % animation.duration;
-        animation.prepareFrame(frameIndex);
-        this.frames = [];
-        var minX = Infinity,
-            maxX = -Infinity;
-        var minY = Infinity,
-            maxY = -Infinity;
-        animation.slots.forEach(function(slot) {
-            var frame = slot.getPlayFrame(frameIndex);
-            frame.oobb.forEach(function(p) {
-                if (p[0] < minX) {
-                    minX = p[0];
-                } else if (p[0] > maxX) {
-                    maxX = p[0];
-                }
-                if (p[1] < minY) {
-                    minY = p[1];
-                } else if (p[1] > maxY) {
-                    maxY = p[1];
-                }
-            });
-            // console.log(frame.matrix);
-            Me.frames.push(frame);
-        });
-        animation.aabb = [
-            minX, minY, maxX, maxY
-        ];
-
-    },
 
     render: function(context, timeStep, now) {
-
         var Me = this;
+        var anim = this.anim;
         this.renderBg(context, timeStep, now);
 
         var x = Me.width / 2,
@@ -120,11 +84,12 @@ var PlayScene = GT.Class.create({
         context.fillRect(0, y, this.width, 2);
         context.fillRect(x, 0, 2, this.height);
 
-        Me.frames.forEach(function(frame) {
-            animation.renderFrame(context, frame, x, y);
-        });
+        this.anim.x = x;
+        this.anim.y = y;
+        this.anim.render(context, timeStep, now);
+
         context.translate(x, y);
-        animation.strokeAABB(context, animation.aabb, "blue");
+        Utils.strokeAABB(context, anim.currentFrame.aabb, "blue");
         context.translate(-x, -y);
         // Utils.renderEntities(this.monsters, context, timeStep, now);
 
@@ -152,7 +117,7 @@ var PlayScene = GT.Class.create({
         //     this.player.action(x, y);
         // }
         this.frameIndex += 0.25;
-        this.updateFrames();
+        this.updateFrames(this.frameIndex);
         console.log(this.frameIndex)
     },
 

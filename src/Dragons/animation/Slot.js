@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -68,8 +68,11 @@ var SKP = SKP || {};
 
             var info = this.getFrameTweenInfo(frameIndex);
             var displayIndex = 0;
+            var alpha = 1;
             if (info) {
                 displayIndex = info.prevFrame.displayIndex || 0;
+                var color = this.getTweenColor(info.prevFrame, info.nextFrame, info.t);
+                alpha = color.aM / 100;
             }
             var skin = this.displaySkins[displayIndex];
 
@@ -79,17 +82,14 @@ var SKP = SKP || {};
 
             var frame = {
                 parent: this,
-                skin: skin,
+                imgName: skin.name,
+                ox: skin.ox,
+                oy: skin.oy,
                 matrix: matrix,
+                alpha: alpha,
             };
 
-            var poly = [
-                matrix.transformPoint(skin.aabb[0], skin.aabb[1]),
-                matrix.transformPoint(skin.aabb[2], skin.aabb[1]),
-                matrix.transformPoint(skin.aabb[2], skin.aabb[3]),
-                matrix.transformPoint(skin.aabb[0], skin.aabb[3]),
-            ];
-            frame.oobb = poly;
+            frame.oobb = matrix.transformAABB(skin.aabb);
             return frame;
         },
 
@@ -98,4 +98,4 @@ var SKP = SKP || {};
 
     exports.Slot = Slot;
 
-}(SKP))
+}(Dragons))

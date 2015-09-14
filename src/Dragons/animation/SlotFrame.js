@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -28,10 +28,10 @@ var SKP = SKP || {};
                 "duration",
                 "displayIndex",
                 "zOrder",
-                "tweenEasing",
                 "action",
             ]);
             this.setColorOffset(this.rawData.color);
+            this.setTweenEasing(this.rawData.tweenEasing);
             this.setTweenCurve(this.rawData.curve);
 
             this.computeAbsoluteColor();
@@ -56,4 +56,4 @@ var SKP = SKP || {};
 
     exports.SlotFrame = SlotFrame;
 
-}(SKP))
+}(Dragons))

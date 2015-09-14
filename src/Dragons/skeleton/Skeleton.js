@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -9,11 +9,11 @@ var SKP = SKP || {};
     var BaseElement = exports.BaseElement;
     var Composite = exports.Composite;
     var DisplaySkin = exports.DisplaySkin;
+    var SkinSet = exports.SkinSet;
 
     var BaseBone = exports.BaseBone;
     var BaseSlot = exports.BaseSlot;
-    var BaseSkinSet = exports.BaseSkinSet;
-    var Animation = exports.Animation;
+    var SKAnimation = exports.SKAnimation;
 
     var Skeleton = GT.Class.create({
         superclass: BaseElement,
@@ -86,7 +86,7 @@ var SKP = SKP || {};
             this.skinSets = [];
             this.skinSetMap = {};
             skinSets.forEach(function(skinSetData) {
-                var skinSet = new BaseSkinSet({
+                var skinSet = new SkinSet({
                     skeleton: Me,
                     rawData: skinSetData
                 });
@@ -101,7 +101,7 @@ var SKP = SKP || {};
             this.animations = [];
             this.animationMap = {};
             animations.forEach(function(animationData) {
-                var animation = new Animation({
+                var animation = new SKAnimation({
                     skeleton: Me,
                     rawData: animationData
                 });
@@ -114,4 +114,4 @@ var SKP = SKP || {};
 
     exports.Skeleton = Skeleton;
 
-}(SKP))
+}(Dragons))

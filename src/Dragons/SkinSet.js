@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -10,7 +10,7 @@ var SKP = SKP || {};
     var Composite = exports.Composite;
     var DisplaySkin = exports.DisplaySkin;
 
-    var BaseSkinSet = GT.Class.create({
+    var SkinSet = GT.Class.create({
         superclass: BaseElement,
 
         name: null,
@@ -53,6 +53,6 @@ var SKP = SKP || {};
         }
     });
 
-    exports.BaseSkinSet = BaseSkinSet;
+    exports.SkinSet = SkinSet;
 
-}(SKP))
+}(Dragons))

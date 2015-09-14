@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {
+var Dragons = Dragons || {
     Class: GT.Class
 };
 
@@ -77,9 +77,8 @@ var SKP = SKP || {
             this.matrix = matrix;
         },
 
-        setColorOffset: function(color) {
-            // aM, rM, gM, bM, aO, rO, gO, bO
-            var defaultValue = {
+        getDefaultColor: function(color) {
+            return {
                 rO: 0,
                 gO: 0,
                 bO: 0,
@@ -89,6 +88,11 @@ var SKP = SKP || {
                 bM: 100,
                 aM: 100
             };
+        },
+
+        setColorOffset: function(color) {
+            // aM, rM, gM, bM, aO, rO, gO, bO
+            var defaultValue = this.getDefaultColor();
             this.color = color || {};
             for (var p in defaultValue) {
                 if (!(p in this.color)) {
@@ -97,36 +101,47 @@ var SKP = SKP || {
             }
         },
 
+        setTweenEasing: function(tweenEasing) {
+            if (tweenEasing === 0) {
+                this.easingFunction = this.tweenLinear;
+            } else if (!tweenEasing) {
+                this.easingFunction = this.tweenNone;
+            }
+        },
         setTweenCurve: function(curve) {
             // var defaultValue = [
             //     0, 0,
             //     1, 1
             // ];
             this.curve = curve; // || defaultValue;
-            // for (var p in defaultValue) {
-            //     if (!(p in this.curve)) {
-            //         this.curve[p] = defaultValue[p];
-            //     }
-            // }
-            if (this.curve) {
-                // this.tweenFunction = this.createCubicBezier.call(null, this.curve);
+            if (curve) {
+                this.easingFunction = this.createTweenBezier(curve);
             }
         },
 
-        createCubicBezier: function(p0, p1, p2, p3) {
+        createTweenBezier: function(points) {
+            var bezier = new BezierEasing(points);
             return function(t) {
-                return p0 * Math.pow(1 - t, 3) + 3 * p1 * t * Math.pow(1 - t, 2) + 3 * p2 * Math.pow(t, 2) * (1 - t) + p3 * Math.pow(t, 3);
+                return bezier.get(t);
             };
         },
 
-        tweenFunction: function(t) {
+        tweenNone: function(t) {
+            return t >= 1 ? 1 : 0;
+        },
+        tweenLinear: function(t) {
+            return t;
+        },
+
+        easingFunction: function(t) {
             return t;
         },
 
         getTweenValue: function(a, b, t) {
-            return a + (b - a) * this.tweenFunction(t);
+            return a + (b - a) * this.easingFunction(t);
         },
         getTweenAngle: function(a, b, t, tweenRotate) {
+            tweenRotate = tweenRotate || 0;
             var d = b + 360 * tweenRotate - a;
             // d = d % 360;
             // d += (d < 0 ? -1 : 1) * (360 * tweenRotate);
@@ -141,7 +156,7 @@ var SKP = SKP || {
             // }
             // d = d % 360;
             // console.log(a, b, d, "--", spin,b-a)
-            var ta = (a + d * this.tweenFunction(t));
+            var ta = (a + d * this.easingFunction(t));
             // console.log(a, b, t, ta)
             return ta;
         },
@@ -185,8 +200,20 @@ var SKP = SKP || {
         },
 
         getTweenColor: function(prevFrame, nextFrame, t) {
-            var pT = prevFrame.color,
-                nT = nextFrame.color;
+            var pC = prevFrame.color || this.getDefaultColor();
+            if (!nextFrame) {
+                return {
+                rO: pC.rO,
+                gO: pC.gO,
+                bO: pC.bO,
+                aO: pC.aO,
+                rM: pC.rM,
+                gM: pC.gM,
+                bM: pC.bM,
+                aM: pC.aM,
+                }
+            }
+            var nC = nextFrame.color || this.getDefaultColor();
             var keys = [
                 "rO", "gO", "bO", "aO",
                 "rM", "gM", "bM", "aM",
@@ -194,7 +221,7 @@ var SKP = SKP || {
             var color = {};
             var Me = this;
             keys.forEach(function(k) {
-                color[k] = prevFrame.getTweenValue(pT[k], nT[k], t);
+                color[k] = prevFrame.getTweenValue(pC[k], nC[k], t);
             });
             return color;
         },
@@ -260,4 +287,4 @@ var SKP = SKP || {
 
     exports.BaseElement = BaseElement;
 
-}(SKP))
+}(Dragons));

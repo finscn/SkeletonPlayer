@@ -171,5 +171,24 @@ Matrix.prototype = {
             ny = x * this.b + y * this.d + this.ty;
 
         return [nx, ny];
-    }
+    },
+    transformPoly: function(vertices) {
+        var poly = [];
+        var Me = this;
+        vertices.forEach(function(v) {
+            var nx = v[0] * Me.a + v[1] * Me.c + Me.tx,
+                ny = v[0] * Me.b + v[1] * Me.d + Me.ty;
+            poly.push([nx, ny]);
+        });
+        return poly;
+    },
+    transformAABB: function(aabb) {
+        var vertices = [
+            [aabb[0], aabb[1]],
+            [aabb[2], aabb[1]],
+            [aabb[2], aabb[3]],
+            [aabb[0], aabb[3]]
+        ];
+        return this.transformPoly(vertices);
+    },
 };

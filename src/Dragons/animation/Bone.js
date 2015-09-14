@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -99,4 +99,4 @@ var SKP = SKP || {};
 
     exports.Bone = Bone;
 
-}(SKP))
+}(Dragons))

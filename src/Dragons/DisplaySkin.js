@@ -1,6 +1,6 @@
 "use strict";
 
-var SKP = SKP || {};
+var Dragons = Dragons || {};
 
 (function(exports) {
 
@@ -37,6 +37,8 @@ var SKP = SKP || {};
             this.img = ResourcePool.get(this.name);
             var w = this.img.width,
                 h = this.img.height;
+            this.ox = -w / 2;
+            this.oy = -h / 2;
             this.aabb = [-w / 2, -h / 2, w / 2, h / 2]
         },
 
@@ -63,4 +65,4 @@ var SKP = SKP || {};
 
     exports.DisplaySkin = DisplaySkin;
 
-}(SKP))
+}(Dragons))
