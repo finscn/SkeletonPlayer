@@ -161,6 +161,9 @@ var Dragons = Dragons || {};
                     maxY = -Infinity;
                 this.slots.forEach(function(slot) {
                     var slotFrame = slot.getPlayFrame(frameIndex);
+                    if (!slotFrame){
+                        return;
+                    }
                     var piece = {
                         imgName: slotFrame.imgName,
                         matrix: slotFrame.matrix,

@@ -71,11 +71,16 @@ var Dragons = Dragons || {};
             var alpha = 1;
             if (info) {
                 displayIndex = info.prevFrame.displayIndex || 0;
+                if (displayIndex < 0) {
+                    console.log(info.prevFrame.rawData)
+                }
                 var color = this.getTweenColor(info.prevFrame, info.nextFrame, info.t);
                 alpha = color.aM / 100;
             }
+            if (displayIndex < 0) {
+                return null;
+            }
             var skin = this.displaySkins[displayIndex];
-
             var matrix = new Matrix(1, 0, 0, 1, 0, 0);
             matrix.concat(skin.matrix);
             matrix.concat(this.parent.frameMatrix[frameIndex]);
