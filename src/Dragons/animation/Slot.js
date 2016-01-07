@@ -75,7 +75,7 @@ var Dragons = Dragons || {};
                     // console.log(info.prevFrame.rawData)
                     return null;
                 }
-                var color = this.getTweenColor(info.prevFrame, info.nextFrame, info.t);
+                var color = this.getTweenColor(info.prevFrame, info.nextFrame, info.passedPercent);
                 alpha = color.aM / 100;
             }
 
@@ -91,6 +91,8 @@ var Dragons = Dragons || {};
                 oy: skin.oy,
                 matrix: matrix,
                 alpha: alpha,
+                displayIndex: displayIndex,
+                slotZ: skin.parent.z,
             };
 
             frame.oobb = matrix.transformAABB(skin.aabb);

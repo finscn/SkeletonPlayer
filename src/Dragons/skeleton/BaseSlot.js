@@ -15,7 +15,7 @@ var Dragons = Dragons || {};
         superclass: BaseElement,
 
         name: "slotName",
-        z: 1 ,
+        z: 0 ,
         parentName: null, // parent: "boneName"
         displayIndex: 0,
 

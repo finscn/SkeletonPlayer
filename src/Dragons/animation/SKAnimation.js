@@ -161,10 +161,12 @@ var Dragons = Dragons || {};
                     maxY = -Infinity;
                 this.slots.forEach(function(slot) {
                     var slotFrame = slot.getPlayFrame(frameIndex);
-                    if (!slotFrame){
+                    if (!slotFrame) {
                         return;
                     }
                     var piece = {
+                        displayIndex: slotFrame.displayIndex,
+                        slotZ: slotFrame.slotZ,
                         imgName: slotFrame.imgName,
                         matrix: slotFrame.matrix,
                         alpha: slotFrame.alpha,
@@ -186,6 +188,9 @@ var Dragons = Dragons || {};
                     });
                     // console.log(piece.matrix);
                     frame.pieces.push(piece);
+                });
+                frame.pieces.sort(function(a, b) {
+                    return a.slotZ - b.slotZ;
                 });
                 frame.aabb = [
                     minX, minY, maxX, maxY
