@@ -35,8 +35,6 @@
             "js/lib/GT/DisplayObject.js",
             "js/lib/GT/DataStore.js",
 
-            "js/lib/GT/state/State.js",
-            "js/lib/GT/state/StateEntity.js",
 
             "js/lib/GT/toucher/Controller.js",
             "js/lib/GT/toucher/TouchWrapper.js",
@@ -49,33 +47,6 @@
             "js/lib/GT/toucher/gesture/Rotate.js",
             "js/lib/GT/toucher/components/Joybutton.js",
             "js/lib/GT/toucher/components/Joystick.js",
-
-            "js/lib/CUI.js/Class.js",
-            "js/lib/CUI.js/Utils.js",
-            "js/lib/CUI.js/Composite.js",
-            "js/lib/CUI.js/EventDispatcher.js",
-            "js/lib/CUI.js/TouchTarget.js",
-            "js/lib/CUI.js/Slider.js",
-            "js/lib/CUI.js/Font.js",
-            "js/lib/CUI.js/renderer/BaseRenderer.js",
-            "js/lib/CUI.js/renderer/TextRenderer.js",
-            "js/lib/CUI.js/renderer/ImageRenderer.js",
-            "js/lib/CUI.js/layout/BaseLayout.js",
-            "js/lib/CUI.js/layout/VBoxLayout.js",
-            "js/lib/CUI.js/layout/HBoxLayout.js",
-            "js/lib/CUI.js/layout/TableLayout.js",
-            "js/lib/CUI.js/layout/Layout.js",
-            "js/lib/CUI.js/Component.js",
-            "js/lib/CUI.js/Root.js",
-            "js/lib/CUI.js/widget/Blank.js",
-            "js/lib/CUI.js/widget/Label.js",
-            "js/lib/CUI.js/widget/Button.js",
-            "js/lib/CUI.js/widget/Page.js",
-            "js/lib/CUI.js/widget/Panel.js",
-            "js/lib/CUI.js/widget/ProgressBar.js",
-            "js/lib/CUI.js/widget/ScrollArea.js",
-
-
 
 
 
@@ -106,6 +77,7 @@
 "../src/Sprite/Animation.js",
 
             "js/anim/Robot.js",
+            "js/anim/text1.js",
             "js/LoadingScene.js",
             // "js/StartScene.js",
             "js/PlayScene.js",
