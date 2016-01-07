@@ -69,10 +69,9 @@ var Dragons = Dragons || {
             this.transform.rotation = this.transform.skX * Math.PI / 180;
             this.transform.scaleX = this.transform.scX;
             this.transform.scaleY = this.transform.scY;
-
             var matrix = new Matrix(1, 0, 0, 1, 0, 0);
-            matrix.scale(this.transform.scaleX, this.transform.scaleY);
             matrix.rotate(this.transform.rotation);
+            matrix.scale(this.transform.scaleX, this.transform.scaleY);
             matrix.translate(this.transform.x, this.transform.y);
             this.matrix = matrix;
         },
@@ -137,12 +136,27 @@ var Dragons = Dragons || {
             return t;
         },
 
-        getTweenValue: function(a, b, t) {
-            return a + (b - a) * this.easingFunction(t);
+        getTweenValue: function(a, b, passedPercent) {
+            return a + (b - a) * this.easingFunction(passedPercent);
         },
-        getTweenAngle: function(a, b, t, tweenRotate) {
+        getTweenAngle: function(a, b, passedPercent, tweenRotate) {
             tweenRotate = tweenRotate || 0;
-            var d = b + 360 * tweenRotate - a;
+
+            var d = b - a;
+            d = d % 360;
+
+            if (d > 180) {
+                d = 360 - d;
+            } else if (d < -180) {
+                d = 360 + d;
+            }
+
+            d += 360 * tweenRotate;
+
+            if (d == 0) {
+                return a;
+            }
+
             // d = d % 360;
             // d += (d < 0 ? -1 : 1) * (360 * tweenRotate);
 
@@ -156,12 +170,12 @@ var Dragons = Dragons || {
             // }
             // d = d % 360;
             // console.log(a, b, d, "--", spin,b-a)
-            var ta = (a + d * this.easingFunction(t));
-            // console.log(a, b, t, ta)
+            var ta = (a + d * this.easingFunction(passedPercent));
+            // console.log(a, b, passedPercent, ta)
             return ta;
         },
 
-        getTweenTransform: function(prevFrame, nextFrame, t) {
+        getTweenTransform: function(prevFrame, nextFrame, passedPercent) {
             var pT = prevFrame.transform;
             if (!nextFrame) {
                 return {
@@ -178,11 +192,11 @@ var Dragons = Dragons || {
                 }
             }
             var nT = nextFrame.transform;
-            var x = prevFrame.getTweenValue(pT.x, nT.x, t);
-            var y = prevFrame.getTweenValue(pT.y, nT.y, t);
-            var scaleX = prevFrame.getTweenValue(pT.scaleX, nT.scaleX, t);
-            var scaleY = prevFrame.getTweenValue(pT.scaleY, nT.scaleY, t);
-            var angle = prevFrame.getTweenAngle(pT.angle, nT.angle, t, prevFrame.tweenRotate);
+            var x = prevFrame.getTweenValue(pT.x, nT.x, passedPercent);
+            var y = prevFrame.getTweenValue(pT.y, nT.y, passedPercent);
+            var scaleX = prevFrame.getTweenValue(pT.scaleX, nT.scaleX, passedPercent);
+            var scaleY = prevFrame.getTweenValue(pT.scaleY, nT.scaleY, passedPercent);
+            var angle = prevFrame.getTweenAngle(pT.angle, nT.angle, passedPercent, prevFrame.tweenRotate);
             var transform = {
                 x: x,
                 y: y,
@@ -199,18 +213,18 @@ var Dragons = Dragons || {
             return transform;
         },
 
-        getTweenColor: function(prevFrame, nextFrame, t) {
+        getTweenColor: function(prevFrame, nextFrame, passedPercent) {
             var pC = prevFrame.color || this.getDefaultColor();
             if (!nextFrame) {
                 return {
-                rO: pC.rO,
-                gO: pC.gO,
-                bO: pC.bO,
-                aO: pC.aO,
-                rM: pC.rM,
-                gM: pC.gM,
-                bM: pC.bM,
-                aM: pC.aM,
+                    rO: pC.rO,
+                    gO: pC.gO,
+                    bO: pC.bO,
+                    aO: pC.aO,
+                    rM: pC.rM,
+                    gM: pC.gM,
+                    bM: pC.bM,
+                    aM: pC.aM,
                 }
             }
             var nC = nextFrame.color || this.getDefaultColor();
@@ -221,7 +235,7 @@ var Dragons = Dragons || {
             var color = {};
             var Me = this;
             keys.forEach(function(k) {
-                color[k] = prevFrame.getTweenValue(pC[k], nC[k], t);
+                color[k] = prevFrame.getTweenValue(pC[k], nC[k], passedPercent);
             });
             return color;
         },
@@ -248,8 +262,8 @@ var Dragons = Dragons || {
             }
             return {
                 passed: passed,
+                passedPercent: passed / prevFrame.duration,
                 duration: prevFrame.duration,
-                t: passed / prevFrame.duration,
                 prevFrame: prevFrame,
                 nextFrame: nextFrame
             };

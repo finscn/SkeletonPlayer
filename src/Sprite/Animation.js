@@ -163,7 +163,9 @@ var Sprite = Sprite || {};
                 x = this.x + this.ox;
                 y = this.y + this.oy;
             }
+
             frame.render(context, x, y);
+
             if (this.debug) {
                 frame.renderAABB(context, x, y);
                 frame.renderPieceBorder(context, x, y);

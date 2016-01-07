@@ -82,7 +82,7 @@ var Dragons = Dragons || {};
             // }
             var transform = this.getDefaultTransform();
             if (info) {
-                transform = this.getTweenTransform(info.prevFrame, info.nextFrame, info.t)
+                transform = this.getTweenTransform(info.prevFrame, info.nextFrame, info.passedPercent)
             }
             var frame = new BoneFrame({
                 parent: this,
