@@ -36,15 +36,15 @@ var Dragons = Dragons || {};
 
             this.setColorOffset(this.rawData.color);
 
-            this.displaySkins = [];
             this.displaySkinMap = {};
+            this.displaySkins = [];
 
             this.updateRelational();
         },
 
         addDisplaySkin: function(displaySkin) {
             if (displaySkin && !this.displaySkinMap[displaySkin.name]) {
-                this.displaySkinMap[displaySkin.name] = displaySkin;
+                this.displaySkinMap[displaySkin.name] = true;
                 this.displaySkins.push(displaySkin);
             }
         },

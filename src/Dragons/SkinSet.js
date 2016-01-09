@@ -46,8 +46,8 @@ var Dragons = Dragons || {};
                     rawData: displaySkinData
                 });
                 displaySkin.init();
+                Me.displaySkinMap[displaySkin.name] = true;
                 Me.displaySkins.push(displaySkin);
-                Me.displaySkinMap[displaySkin.name] = displaySkin;
             });
 
         }
