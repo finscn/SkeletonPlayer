@@ -49,9 +49,7 @@ var Dragons = Dragons || {};
             // slots: null,
             this.initBones(this.rawData.bone);
             this.initSlots(this.rawData.slot);
-
             this.initFrames(this.rawData.frame);
-
         },
 
         initFrames: function(frames) {
@@ -101,8 +99,9 @@ var Dragons = Dragons || {};
         initSlots: function(slots) {
             var Me = this;
             this.slots = [];
-            slots.forEach(function(slotData) {
+            slots.forEach(function(slotData, idx) {
                 var slot = new Slot({
+                    _idx: idx,
                     animation: Me,
                     skeleton: Me.skeleton,
                     rawData: slotData
@@ -186,11 +185,16 @@ var Dragons = Dragons || {};
                             maxY = p[1];
                         }
                     });
-                    // console.log(piece.matrix);
+                    delete piece.oobb;
                     frame.pieces.push(piece);
                 });
                 frame.pieces.sort(function(a, b) {
-                    return a.slotZ - b.slotZ;
+                    var d = a.slotZ - b.slotZ;
+                    return d == 0 ? a.displayIndex - b.displayIndex : d;
+                });
+                frame.pieces.forEach(function(p) {
+                    delete p.displayIndex;
+                    delete p.sortZ;
                 });
                 frame.aabb = [
                     minX, minY, maxX, maxY

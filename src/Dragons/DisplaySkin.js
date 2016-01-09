@@ -47,7 +47,7 @@ var Dragons = Dragons || {};
             var parentSlot = slotMap[this.parentName];
             if (parentSlot) {
                 this.parent = parentSlot;
-                parentSlot.displaySkins.push(this);
+                parentSlot.addDisplaySkin(this);
             }
         },
 

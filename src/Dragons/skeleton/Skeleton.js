@@ -30,11 +30,11 @@ var Dragons = Dragons || {};
             this.initAttribute("name");
 
             this.initBones(this.rawData.bone);
+
             this.initSlots(this.rawData.slot);
+
             this.initSkinSets(this.rawData.skin);
-
             this.initAnimations(this.rawData.animation);
-
         },
 
         initBones: function(bones) {

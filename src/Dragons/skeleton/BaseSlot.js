@@ -15,7 +15,7 @@ var Dragons = Dragons || {};
         superclass: BaseElement,
 
         name: "slotName",
-        z: 0 ,
+        z: 0,
         parentName: null, // parent: "boneName"
         displayIndex: 0,
 
@@ -31,17 +31,23 @@ var Dragons = Dragons || {};
             this.initAttributes([
                 "name",
                 "displayIndex",
-                "z",
-                ["parent", null, "parentName"],
+                "z", ["parent", null, "parentName"],
             ]);
 
             this.setColorOffset(this.rawData.color);
 
             this.displaySkins = [];
+            this.displaySkinMap = {};
 
             this.updateRelational();
         },
 
+        addDisplaySkin: function(displaySkin) {
+            if (displaySkin && !this.displaySkinMap[displaySkin.name]) {
+                this.displaySkinMap[displaySkin.name] = displaySkin;
+                this.displaySkins.push(displaySkin);
+            }
+        },
         updateRelational: function() {
             var boneMap = this.skeleton.boneMap;
             var parentBone = boneMap[this.parentName];

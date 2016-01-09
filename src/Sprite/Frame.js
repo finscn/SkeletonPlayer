@@ -45,10 +45,10 @@ var Sprite = Sprite || {};
             p.alpha = p.alpha || p.alpha === 0 ? p.alpha : 1;
             p.imgInfo = this.animation.getImgInfo(p.imgName);
             p.img = p.imgInfo.img;
-            p.ix = p.imgInfo.x;
-            p.iy = p.imgInfo.y;
-            p.iw = p.imgInfo.w;
-            p.ih = p.imgInfo.h;
+            p.sx = p.imgInfo.x;
+            p.sy = p.imgInfo.y;
+            p.sw = p.imgInfo.w;
+            p.sh = p.imgInfo.h;
             p.ox = p.ox || 0;
             p.oy = p.oy || 0;
             p.x = p.x || 0;
@@ -70,10 +70,10 @@ var Sprite = Sprite || {};
             if (m) {
                 context.save();
                 context.transform(m.a, m.b, m.c, m.d, m.tx + x, m.ty + y);
-                context.drawImage(p.img, p.ix, p.iy, p.iw, p.ih, p.ox, p.oy, p.iw, p.ih);
+                context.drawImage(p.img, p.sx, p.sy, p.sw, p.sh, p.ox, p.oy, p.sw, p.sh);
                 context.restore();
             } else {
-                context.drawImage(p.img, p.ix, p.iy, p.iw, p.ih, x + p.ox, y + p.oy, p.iw, p.ih);
+                context.drawImage(p.img, p.sx, p.sy, p.sw, p.sh, x + p.ox, y + p.oy, p.sw, p.sh);
             }
             context.globalAlpha = 1;
         },
@@ -95,7 +95,7 @@ var Sprite = Sprite || {};
                 var m = p.matrix;
                 context.transform(m.a, m.b, m.c, m.d, m.e, m.f);
                 context.strokeStyle = "#ff6600";
-                context.strokeRect(0, 0, p.iw, p.ih);
+                context.strokeRect(0, 0, p.sw, p.sh);
                 context.strokeRect(0, 0, 2, 2);
                 context.restore();
             }
