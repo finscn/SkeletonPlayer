@@ -26,6 +26,10 @@ var Dragons = Dragons || {};
 
         absolute: null,
 
+        // TODO
+        inheritScale: true,
+        inheritRotation: true,
+
         init: function() {
             Composite.apply(this);
             this.setRawData(this.rawData);

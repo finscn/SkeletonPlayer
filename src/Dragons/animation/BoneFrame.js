@@ -15,7 +15,10 @@ var Dragons = Dragons || {};
         event: null,
         sound: null,
         tweenEasing: 0,
+
+        // TODO
         tweenRotate: 0,
+        spin: 0,
 
         transform: null,
         curve: null,
