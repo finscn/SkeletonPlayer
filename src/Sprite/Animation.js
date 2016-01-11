@@ -4,9 +4,6 @@ var Sprite = Sprite || {};
 
 (function(exports) {
 
-    var ImagePool = exports.ImagePool;
-    var ImageMapping = exports.ImageMapping;
-    var AnimationPool = exports.AnimationPool;
     var Frame = exports.Frame;
 
     var Animation = function(options) {
@@ -86,18 +83,6 @@ var Sprite = Sprite || {};
         start: function() {
             this.setFrame(0);
             this.paused = false;
-        },
-
-        getImgInfo: function(imgName) {
-            var skinName = this.skinName || "";
-            var img = ResourcePool.get(skinName + imgName);
-            return {
-                img: img,
-                x: 0,
-                y: 0,
-                w: img.width,
-                h: img.height,
-            };
         },
 
         setFrame: function(index) {

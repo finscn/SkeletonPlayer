@@ -8,7 +8,6 @@ var Sprite = Sprite || {};
     var ImageMapping = exports.ImageMapping || {};
     var AnimationPool = exports.AnimationPool || {};
 
-
     exports.ImagePool = ImagePool;
     exports.ImageMapping = ImageMapping;
     exports.AnimationPool = AnimationPool;
