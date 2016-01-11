@@ -136,20 +136,23 @@ var Dragons = Dragons || {
             return t;
         },
 
+        clampAngle: function(angle) {
+            angle = angle % 360;
+            if (angle > 180) {
+                angle = 360 - angle;
+            } else if (angle < -180) {
+                angle = 360 + angle;
+            }
+            return angle;
+        },
         getTweenValue: function(a, b, passedPercent) {
             return a + (b - a) * this.easingFunction(passedPercent);
         },
         getTweenAngle: function(a, b, passedPercent, tweenRotate) {
             tweenRotate = tweenRotate || 0;
 
-            var d = b - a;
-            d = d % 360;
+            var d = this.clampAngle(b - a);
 
-            if (d > 180) {
-                d = 360 - d;
-            } else if (d < -180) {
-                d = 360 + d;
-            }
 
             d += 360 * tweenRotate;
 
@@ -196,7 +199,20 @@ var Dragons = Dragons || {
             var y = prevFrame.getTweenValue(pT.y, nT.y, passedPercent);
             var scaleX = prevFrame.getTweenValue(pT.scaleX, nT.scaleX, passedPercent);
             var scaleY = prevFrame.getTweenValue(pT.scaleY, nT.scaleY, passedPercent);
-            var angle = prevFrame.getTweenAngle(pT.angle, nT.angle, passedPercent, prevFrame.tweenRotate);
+
+            var angle;
+
+            var pA = pT.angle,
+                nA = nT.angle;
+            if (this.baseBone) {
+                var baseAngle = this.baseBone.transform.angle;
+                pA = this.clampAngle(pA + baseAngle);
+                nA = this.clampAngle(nA + baseAngle);
+                angle = prevFrame.getTweenAngle(pA, nA, passedPercent, prevFrame.tweenRotate);
+                angle -= baseAngle;
+            } else {
+                angle = prevFrame.getTweenAngle(pA, nA, passedPercent, prevFrame.tweenRotate);
+            }
             var transform = {
                 x: x,
                 y: y,
