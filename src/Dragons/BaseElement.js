@@ -139,7 +139,7 @@ var Dragons = Dragons || {
         clampAngle: function(angle) {
             angle = angle % 360;
             if (angle > 180) {
-                angle = 360 - angle;
+                angle = angle - 360;
             } else if (angle < -180) {
                 angle = 360 + angle;
             }
@@ -151,8 +151,8 @@ var Dragons = Dragons || {
         getTweenAngle: function(a, b, passedPercent, tweenRotate) {
             tweenRotate = tweenRotate || 0;
 
-            var d = this.clampAngle(b - a);
-
+            var d = b - a;
+            d = this.clampAngle(d);
 
             d += 360 * tweenRotate;
 
