@@ -67,7 +67,7 @@ var Dragons = Dragons || {};
         getPlayFrame: function(frameIndex) {
 
             var info = this.getFrameTweenInfo(frameIndex);
-            var displayIndex = 0;
+            var displayIndex = this.baseSlot.displayIndex || 0;
             var alpha = 1;
             if (info) {
                 displayIndex = info.prevFrame.displayIndex || 0;
@@ -78,7 +78,9 @@ var Dragons = Dragons || {};
                 var color = this.getTweenColor(info.prevFrame, info.nextFrame, info.passedPercent);
                 alpha = color.aM / 100;
             }
-
+            if (displayIndex < 0) {
+                return null;
+            }
             var skin = this.displaySkins[displayIndex];
             var matrix = new Matrix(1, 0, 0, 1, 0, 0);
             matrix.concat(skin.matrix);
