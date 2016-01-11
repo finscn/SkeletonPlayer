@@ -41,6 +41,7 @@ var Sprite = Sprite || {};
         paused: false,
 
         rawData: null,
+        skinName: null,
 
         init: function() {
             this.frames = this.frames || this.getFramesConfig();
@@ -88,7 +89,8 @@ var Sprite = Sprite || {};
         },
 
         getImgInfo: function(imgName) {
-            var img = ResourcePool.get(imgName);
+            var skinName = this.skinName || "";
+            var img = ResourcePool.get(skinName + imgName);
             return {
                 img: img,
                 x: 0,

@@ -213,6 +213,7 @@ var Dragons = Dragons || {
             } else {
                 angle = prevFrame.getTweenAngle(pA, nA, passedPercent, prevFrame.tweenRotate);
             }
+
             var transform = {
                 x: x,
                 y: y,

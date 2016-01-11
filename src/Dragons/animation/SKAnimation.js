@@ -167,8 +167,8 @@ var Dragons = Dragons || {};
                         displayIndex: slotFrame.displayIndex,
                         slotZ: slotFrame.slotZ,
                         imgName: slotFrame.imgName,
-                        matrix: slotFrame.matrix,
                         alpha: slotFrame.alpha,
+                        matrix: slotFrame.matrix,
                         ox: slotFrame.ox,
                         oy: slotFrame.oy,
                         oobb: slotFrame.oobb,
@@ -213,6 +213,26 @@ var Dragons = Dragons || {};
                 framesData: frames,
                 loop: this.playTimes === 0 ? true : this.playTimes - 1,
             };
+            return animation;
+        },
+
+        scaleSkeleton: function(animation, scaleX, scaleY) {
+            scaleX = scaleX || 1;
+            scaleY = scaleY || scaleX;
+            var frames = animation.framesData;
+            frames.forEach(function(frame) {
+                frame.pieces.forEach(function(piece) {
+                    piece.ox *= scaleX;
+                    piece.oy *= scaleY;
+                    piece.matrix.tx *= scaleX;
+                    piece.matrix.ty *= scaleY;
+                    // piece.matrix.scale(scaleX, scaleY);
+                });
+                frame.aabb[0] *= scaleX;
+                frame.aabb[1] *= scaleY;
+                frame.aabb[2] *= scaleX;
+                frame.aabb[3] *= scaleY;
+            });
             return animation;
         }
 
