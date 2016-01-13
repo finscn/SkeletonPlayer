@@ -14,14 +14,19 @@ var Sprite = Sprite || {};
 
         constructor: Frame,
 
+        animation: null,
+        pieces: null,
+        pieceCount: 0,
+
+        startTime: null,
+        endTime: null,
         duration: null,
+
         imgName: null,
         alpha: 1,
         matrix: null,
 
-        startTime: null,
-        endTime: null,
-        animation: null,
+
 
         init: function() {
             this.imagePool = exports.ImagePool;
@@ -40,8 +45,12 @@ var Sprite = Sprite || {};
             this.pieceCount = this.pieces.length;
             for (var i = 0; i < this.pieceCount; i++) {
                 var p = this.pieces[i];
+                p.zIndex = p.zIndex || 0;
                 this.initPiece(p);
             }
+            this.pieces.sort(function(a, b) {
+                return a.zIndex - b.zIndex;
+            });
         },
 
         initPiece: function(p) {

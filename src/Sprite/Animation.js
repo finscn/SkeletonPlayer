@@ -21,13 +21,14 @@ var Sprite = Sprite || {};
         ox: 0,
         oy: 0,
         parent: null,
-
         loop: false,
-        framesData: null,
 
-        frames: null,
+
         duration: 0,
         played: 0,
+
+        framesData: null,
+        frames: null,
         frameCount: -1,
         startIndex: 0,
         endIndex: Infinity,
@@ -37,38 +38,51 @@ var Sprite = Sprite || {};
         currentEndTime: -1,
         paused: false,
 
-        rawData: null,
+        img: null,
+        imageMapping: null,
+
         skinName: null,
         skinCenterAnchor: true,
 
         init: function() {
             this.frames = this.frames || this.getFramesConfig();
+            this.duration = this.duration || 0;
             this.frameCount = this.frames.length;
             this.endIndex = Math.min(this.endIndex, this.frameCount - 1);
 
             if (this.frameCount > 0) {
+                var frame = new Frame(this.frames[0]);
+                frame.animation = this;
+                this.frames[0] = frame;
                 var time = 0;
-                var prevFrame;
-                for (var i = 0; i < this.frameCount; i++) {
-                    var frame = new Frame(this.frames[i]);
-                    frame.animation = this;
+                for (var i = 1; i < this.frameCount; i++) {
+                    var nextFrame = new Frame(this.frames[i]);
+                    nextFrame.animation = this;
                     if (frame.duration) {
                         frame.startTime = time;
                         frame.endTime = time + frame.duration;
+                    } else {
+                        frame.endTime = nextFrame.startTime;
                     }
                     frame.init();
                     time += frame.duration;
+
+                    frame = nextFrame;
                     this.frames[i] = frame;
                 }
-                this.duration = this.duration || time;
-                this.reset();
-            } else {
-                this.duration = this.duration || 0;
-            }
-        },
+                if (frame.duration) {
+                    frame.startTime = time;
+                    frame.endTime = time + frame.duration;
+                }
+                if (!this.duration && frame.endTime) {
+                    this.duration = frame.endTime;
+                } else if (!frame.endTime) {
+                    frame.endTime = this.duration || time;
+                }
+                frame.init();
 
-        setRawData: function(rawData) {
-            this.rawData = JSON.parse(JSON.stringify(rawData));
+                this.reset();
+            }
         },
 
         getFramesConfig: function() {
@@ -77,12 +91,13 @@ var Sprite = Sprite || {};
         },
 
         reset: function() {
+            this.ended = false;
             this.played = 0;
             this.setFrame(0);
         },
 
         start: function() {
-            this.setFrame(0);
+            this.reset();
             this.paused = false;
         },
 
@@ -90,7 +105,7 @@ var Sprite = Sprite || {};
             this.currentIndex = index;
             this.currentFrame = this.frames[index];
             if (!this.currentFrame) {
-                console.log("error Animation Index", index, this.frameCount);
+                // console.log("error Animation Index", index, this.frameCount);
             }
             this.currentEndTime = this.currentFrame.endTime;
         },
@@ -110,7 +125,7 @@ var Sprite = Sprite || {};
         },
 
         update: function(timeStep) {
-            if (this.paused) {
+            if (this.paused || this.ended) {
                 return false;
             }
             var last = this.currentIndex;
@@ -118,19 +133,25 @@ var Sprite = Sprite || {};
                 if (this.currentIndex === this.endIndex) {
                     this.onEnd && this.onEnd(timeStep);
                     if (this.loop === true || --this.loop > 0) {
-                        this.played = 0;
+                        // this.played = 0;
+                        this.played -= this.currentEndTime;
                         this.currentIndex = this.startIndex;
+                    } else {
+                        this.ended = true;
                     }
                 } else {
                     this.currentIndex++;
                     this.played += timeStep;
                 }
-                this.setFrame(this.currentIndex);
-
             } else {
                 this.played += timeStep;
             }
-            return last !== this.currentIndex;
+
+            this.changed = last !== this.currentIndex;
+            if (this.changed) {
+                this.setFrame(this.currentIndex);
+            }
+            return this.changed;
         },
 
         onEnd: null,
@@ -151,9 +172,7 @@ var Sprite = Sprite || {};
                 x = this.x + this.ox;
                 y = this.y + this.oy;
             }
-
             frame.render(context, x, y);
-
             if (this.debug) {
                 frame.renderAABB(context, x, y);
                 frame.renderPieceBorder(context, x, y);
