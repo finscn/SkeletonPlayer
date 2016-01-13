@@ -26,6 +26,7 @@ var Dragons = Dragons || {};
         animations: null,
 
         init: function() {
+            this.rawData = this.rawData || this.json.armature[0];
             this.setRawData(this.rawData);
             this.initAttribute("name");
 
@@ -35,6 +36,82 @@ var Dragons = Dragons || {};
 
             this.initSkinSets(this.rawData.skin);
             this.initAnimations(this.rawData.animation);
+        },
+        loadImage: function(file, callback) {
+            var img = new Image();
+            img.src = file;
+            img.onload = function(event) {
+                if (callback) {
+                    callback(img, event)
+                }
+            };
+            return img;
+        },
+        loadSkeletonJSON: function(file, async, callback) {
+            var Me = this;
+            this.loadJSON(file, async, function(json, xhr) {
+                Me.json = json;
+                Me.init();
+                if (callback) {
+                    callback(json, xhr);
+                }
+            });
+        },
+        loadTextureJSON: function(file, async, callback) {
+            var Me = this;
+            var imgMapping = {};
+            this.loadJSON(file, async, function(json, xhr) {
+                var name = json.name;
+                var imagePath = json.imagePath;
+                var subTexture = json.SubTexture;
+                subTexture.forEach(function(t) {
+                    var key = t.name;
+                    var info = {
+                        img: name,
+                        x: t.x,
+                        y: t.y,
+                        w: t.width,
+                        h: t.height,
+                        ox: -t.frameX,
+                        oy: -t.frameY,
+                        sw: t.frameWidth,
+                        sh: t.frameHeight,
+                    };
+                    imgMapping[key] = info;
+                });
+                if (callback) {
+                    callback(imgMapping);
+                }
+            });
+            return imgMapping;
+        },
+
+        loadJSON: function(url, async, callback) {
+
+            async = !!async; // async=== false ? false : true;
+            var method = "GET";
+            var Me = this;
+            var onResponse = function() {
+                var text = xhr.responseText;
+                var json = JSON.parse(text);
+                if (callback) {
+                    callback(json, xhr);
+                }
+            };
+            var xhr = new XMLHttpRequest();
+            xhr.open(method, url, async);
+
+            if (async) {
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4) {
+                        onResponse();
+                    }
+                }
+            }
+            xhr.send();
+            if (!async) {
+                onResponse();
+            }
         },
 
         initBones: function(bones) {

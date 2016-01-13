@@ -117,29 +117,6 @@ var Dragons = Dragons || {};
             });
         },
 
-
-        renderFrame: function(context, frame, x, y) {
-
-            var img = frame.imgInfo.img;
-
-            // if (frame.matrix) {
-            context.save();
-
-            var matrix = frame.matrix;
-
-            context.transform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx + x, matrix.ty + y);
-            // context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx + x, matrix.ty + y);
-
-            context.globalAlpha = frame.alpha;
-            context.drawImage(img, -img.width / 2, -img.height / 2);
-            context.globalAlpha = 1;
-
-            context.restore();
-
-            this.strokePoly(context, frame.oobb, "red", x, y);
-
-        },
-
         getAnimationData: function(duration, FPS, invert) {
             var frameCount = FPS * duration / 1000;
             var timeStep = duration / frameCount;
@@ -171,21 +148,7 @@ var Dragons = Dragons || {};
                         matrix: slotFrame.matrix,
                         ox: slotFrame.ox,
                         oy: slotFrame.oy,
-                        oobb: slotFrame.oobb,
                     };
-                    piece.oobb.forEach(function(p) {
-                        if (p[0] < minX) {
-                            minX = p[0];
-                        } else if (p[0] > maxX) {
-                            maxX = p[0];
-                        }
-                        if (p[1] < minY) {
-                            minY = p[1];
-                        } else if (p[1] > maxY) {
-                            maxY = p[1];
-                        }
-                    });
-                    delete piece.oobb;
                     frame.pieces.push(piece);
                 });
                 frame.pieces.sort(function(a, b) {

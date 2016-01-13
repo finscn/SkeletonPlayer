@@ -26,7 +26,7 @@ var Sprite = Sprite || {};
         init: function() {
             this.imagePool = exports.ImagePool;
             this.imageMapping = exports.ImageMapping;
-            this.skinName = this.skinName || this.animation.skinName || "";
+
             if (this.pieces) {
                 this.initPieces();
                 this.render = this.renderPieces;
@@ -48,43 +48,60 @@ var Sprite = Sprite || {};
             p.alpha = p.alpha || p.alpha === 0 ? p.alpha : 1;
             var imgInfo = this.getImgInfo(p.imgName);
             p.img = imgInfo.img;
-            p.sx = imgInfo.x;
-            p.sy = imgInfo.y;
-            p.sw = imgInfo.w;
-            p.sh = imgInfo.h;
-            p.ox = p.ox || 0;
-            p.oy = p.oy || 0;
-            p.x = p.x || 0;
-            p.y = p.y || 0;
-            p.w = p.w || 0;
-            p.h = p.h || 0;
+            p.x = imgInfo.x;
+            p.y = imgInfo.y;
+            p.w = imgInfo.w;
+            p.h = imgInfo.h;
+            p.ox = (p.ox || 0) + imgInfo.ox;
+            p.oy = (p.oy || 0) + imgInfo.oy;
         },
 
-        getImgInfo: function(name) {
-            if (this.skinName) {
-                name = this.skinName + name;
+        getImg: function(name) {
+            if (this.imagePool) {
+                return this.imagePool[name];
             }
-            var mappingInfo;
+            return this.img || this.animation.img;
+        },
+        getImgInfo: function(name) {
+            var skinName = this.skinName || this.animation.skinName;
+            if (skinName) {
+                name = skinName + name;
+            }
+            var mappingInfo, imgInfo;
             if (this.imageMapping && (mappingInfo = this.imageMapping[name])) {
-                return {
-                    img: this.imagePool[mappingInfo.img],
+                var img = this.getImg(mappingInfo.img);
+                imgInfo = {
+                    img: img,
                     x: mappingInfo.x,
                     y: mappingInfo.y,
                     w: mappingInfo.w,
                     h: mappingInfo.h,
+                    ox: mappingInfo.ox || 0,
+                    oy: mappingInfo.oy || 0,
+                    sw: mappingInfo.sw,
+                    sh: mappingInfo.sh,
                 }
             } else {
-                var img = this.imagePool[name];
-                return {
+                var img = this.getImg(name);
+                imgInfo = {
                     img: img,
                     x: 0,
                     y: 0,
                     w: img.width,
                     h: img.height,
+                    ox: 0,
+                    oy: 0,
+                    sw: img.width,
+                    sh: img.height,
                 }
             }
-
+            if (this.animation.skinCenterAnchor) {
+                imgInfo.ox -= imgInfo.sw / 2;
+                imgInfo.oy -= imgInfo.sh / 2;
+            }
+            return imgInfo;
         },
+
         renderPieces: function(context, x, y) {
             for (var i = 0; i < this.pieceCount; i++) {
                 var p = this.pieces[i];
@@ -98,10 +115,10 @@ var Sprite = Sprite || {};
             if (m) {
                 context.save();
                 context.transform(m.a, m.b, m.c, m.d, m.tx + x, m.ty + y);
-                context.drawImage(p.img, p.sx, p.sy, p.sw, p.sh, p.ox, p.oy, p.sw, p.sh);
+                context.drawImage(p.img, p.x, p.y, p.w, p.h, p.ox, p.oy, p.w, p.h);
                 context.restore();
             } else {
-                context.drawImage(p.img, p.sx, p.sy, p.sw, p.sh, x + p.ox, y + p.oy, p.sw, p.sh);
+                context.drawImage(p.img, p.x, p.y, p.w, p.h, x + p.ox, y + p.oy, p.w, p.h);
             }
             context.globalAlpha = 1;
         },
@@ -123,7 +140,7 @@ var Sprite = Sprite || {};
                 var m = p.matrix;
                 context.transform(m.a, m.b, m.c, m.d, m.e, m.f);
                 context.strokeStyle = "#ff6600";
-                context.strokeRect(0, 0, p.sw, p.sh);
+                context.strokeRect(0, 0, p.w, p.h);
                 context.strokeRect(0, 0, 2, 2);
                 context.restore();
             }

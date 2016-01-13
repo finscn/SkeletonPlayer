@@ -39,6 +39,7 @@ var Sprite = Sprite || {};
 
         rawData: null,
         skinName: null,
+        skinCenterAnchor: true,
 
         init: function() {
             this.frames = this.frames || this.getFramesConfig();

@@ -89,15 +89,11 @@ var Dragons = Dragons || {};
             var frame = {
                 parent: this,
                 imgName: skin.name,
-                ox: skin.ox,
-                oy: skin.oy,
                 matrix: matrix,
                 alpha: alpha,
                 displayIndex: displayIndex,
                 slotZ: skin.parent.z,
             };
-
-            frame.oobb = matrix.transformAABB(skin.aabb);
             return frame;
         },
 
