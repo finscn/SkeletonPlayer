@@ -22,16 +22,17 @@ var Sprite = Sprite || {};
         endTime: null,
         duration: null,
 
-        imgName: null,
         alpha: 1,
         matrix: null,
-
+        imgName: null,
 
 
         init: function() {
             this.imagePool = exports.ImagePool;
             this.imageMapping = exports.ImageMapping;
-
+            // this.startTime = this.startTime || 0;
+            // this.endTime = this.endTime || 0;
+            this.duration = this.duration || this.endTime - this.startTime || 0;
             if (this.pieces) {
                 this.initPieces();
                 this.render = this.renderPieces;
@@ -131,9 +132,15 @@ var Sprite = Sprite || {};
             }
             context.globalAlpha = 1;
         },
+
         renderSelf: function(context, x, y) {
             this.renderPiece(context, this, x, y);
         },
+
+        renderAABB: function(context, x, y) {
+	
+	},
+
         renderPieceBorder: function(context, x, y) {
             var ps, count = this.pieceCount;
             if (!count) {
