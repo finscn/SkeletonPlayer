@@ -23,9 +23,9 @@ var Sprite = Sprite || {};
         duration: null,
 
         alpha: 1,
-        matrix: null,
         imgName: null,
 
+        matrix: null,
 
         init: function() {
             this.imagePool = exports.ImagePool;
@@ -56,6 +56,10 @@ var Sprite = Sprite || {};
 
         initPiece: function(p) {
             p.alpha = p.alpha || p.alpha === 0 ? p.alpha : 1;
+            p.imgName = p.imgName || p.imgId;
+            if (!p.imgName && typeof p.img == "string") {
+                p.imgName = p.img;
+            }
             var imgInfo = this.getImgInfo(p.imgName);
             p.img = imgInfo.img;
             p.x = imgInfo.x;
@@ -72,6 +76,7 @@ var Sprite = Sprite || {};
             }
             return this.img || this.animation.img;
         },
+
         getImgInfo: function(name) {
             var skinName = this.skinName || this.animation.skinName;
             if (skinName) {
@@ -93,6 +98,19 @@ var Sprite = Sprite || {};
                 }
             } else {
                 var img = this.getImg(name);
+                if (!img) {
+                    return {
+                        img: name,
+                        x: 0,
+                        y: 0,
+                        w: 0,
+                        h: 0,
+                        ox: 0,
+                        oy: 0,
+                        sw: 0,
+                        sh: 0,
+                    };
+                }
                 imgInfo = {
                     img: img,
                     x: 0,
@@ -105,11 +123,15 @@ var Sprite = Sprite || {};
                     sh: img.height,
                 }
             }
-            if (this.animation.skinCenterAnchor) {
+            if (this.animation.skinAnchorCenter) {
                 imgInfo.ox -= imgInfo.sw / 2;
                 imgInfo.oy -= imgInfo.sh / 2;
             }
             return imgInfo;
+        },
+
+        renderSelf: function(context, x, y) {
+            this.renderPiece(context, this, x, y);
         },
 
         renderPieces: function(context, x, y) {
@@ -133,14 +155,6 @@ var Sprite = Sprite || {};
             context.globalAlpha = 1;
         },
 
-        renderSelf: function(context, x, y) {
-            this.renderPiece(context, this, x, y);
-        },
-
-        renderAABB: function(context, x, y) {
-	
-	},
-
         renderPieceBorder: function(context, x, y) {
             var ps, count = this.pieceCount;
             if (!count) {
@@ -160,7 +174,7 @@ var Sprite = Sprite || {};
                 context.strokeRect(0, 0, 2, 2);
                 context.restore();
             }
-        }
+        },
 
     };
 

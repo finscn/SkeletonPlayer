@@ -142,7 +142,7 @@ var Dragons = Dragons || {};
                     }
                     var piece = {
                         displayIndex: slotFrame.displayIndex,
-                        slotZ: slotFrame.slotZ,
+                        zIndex: slotFrame.slotZ,
                         imgName: slotFrame.imgName,
                         alpha: slotFrame.alpha,
                         matrix: slotFrame.matrix,
@@ -152,7 +152,7 @@ var Dragons = Dragons || {};
                     frame.pieces.push(piece);
                 });
                 frame.pieces.sort(function(a, b) {
-                    var d = a.slotZ - b.slotZ;
+                    var d = a.zIndex - b.zIndex;
                     return d == 0 ? a.displayIndex - b.displayIndex : d;
                 });
                 frame.pieces.forEach(function(p) {

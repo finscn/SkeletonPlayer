@@ -92,7 +92,7 @@ var Dragons = Dragons || {};
                 matrix: matrix,
                 alpha: alpha,
                 displayIndex: displayIndex,
-                slotZ: skin.parent.z,
+                slotZ: skin.parent.z || 0,
             };
             return frame;
         },

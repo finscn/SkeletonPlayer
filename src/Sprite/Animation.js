@@ -5,6 +5,7 @@ var Sprite = Sprite || {};
 (function(exports) {
 
     var Frame = exports.Frame;
+    var ClassicFrame = exports.ClassicFrame;
 
     var Animation = function(options) {
         for (var p in options) {
@@ -39,25 +40,28 @@ var Sprite = Sprite || {};
         paused: false,
 
         img: null,
-        imageMapping: null,
 
         skinName: null,
-        skinCenterAnchor: true,
+        skinAnchorCenter: false,
+        FrameClass: Frame,
+        classic: false,
 
         init: function() {
+            if (this.classic) {
+                this.FrameClass = ClassicFrame;
+            }
+
             this.frames = this.frames || this.getFramesConfig();
             this.duration = this.duration || 0;
             this.frameCount = this.frames.length;
             this.endIndex = Math.min(this.endIndex, this.frameCount - 1);
 
             if (this.frameCount > 0) {
-                var frame = new Frame(this.frames[0]);
-                frame.animation = this;
+                var frame = this.createFrame(this.frames[0]);
                 this.frames[0] = frame;
                 var time = 0;
                 for (var i = 1; i < this.frameCount; i++) {
-                    var nextFrame = new Frame(this.frames[i]);
-                    nextFrame.animation = this;
+                    var nextFrame = this.createFrame(this.frames[i]);
                     if (frame.duration) {
                         frame.startTime = time;
                         frame.endTime = time + frame.duration;
@@ -90,15 +94,26 @@ var Sprite = Sprite || {};
             return frames || [];
         },
 
+        createFrame: function(cfg) {
+            var frame = new this.FrameClass(cfg);
+            frame.animation = this;
+            return frame;
+        },
+
         reset: function() {
             this.ended = false;
             this.played = 0;
             this.setFrame(0);
         },
 
-        start: function() {
-            this.reset();
+        start: function(index) {
             this.paused = false;
+            this.reset();
+            if (index > 0) {
+                var time = this.frames[index - 1].endTime;
+                this.played = time;
+                this.setFrame(index);
+            }
         },
 
         setFrame: function(index) {
