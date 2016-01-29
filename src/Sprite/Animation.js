@@ -24,6 +24,7 @@ var Sprite = Sprite || {};
         parent: null,
         loop: false,
 
+        allowSkipFrame: true,
 
         duration: 0,
         played: 0,
@@ -50,6 +51,7 @@ var Sprite = Sprite || {};
             if (this.classic) {
                 this.FrameClass = ClassicFrame;
             }
+            this.setAllowSkipFrame(this.allowSkipFrame);
 
             this.frames = this.frames || this.getFramesConfig();
             this.duration = this.duration || 0;
@@ -89,6 +91,15 @@ var Sprite = Sprite || {};
             }
         },
 
+        setAllowSkipFrame: function(allow) {
+            this.allowSkipFrame = allow;
+            if (allow) {
+                this.changeFrame = this.nextFrame;
+            } else {
+                this.changeFrame = this.setFrame;
+            }
+        },
+
         getFramesConfig: function() {
             var frames = JSON.parse(JSON.stringify(this.framesData));
             return frames || [];
@@ -116,13 +127,27 @@ var Sprite = Sprite || {};
             }
         },
 
+        changeFrame: null,
         setFrame: function(index) {
             this.currentIndex = index;
             this.currentFrame = this.frames[index];
-            if (!this.currentFrame) {
-                // console.log("error Animation Index", index, this.frameCount);
-            }
             this.currentEndTime = this.currentFrame.endTime;
+        },
+
+        nextFrame: function() {
+            var index = this.currentIndex;
+            var frame, endTime;
+            for (;;) {
+                frame = this.frames[index];
+                endTime = frame.endTime;
+                if (index == this.endIndex || this.played < endTime) {
+                    break;
+                }
+                index++;
+            }
+            this.currentIndex = index;
+            this.currentFrame = frame;
+            this.currentEndTime = endTime;
         },
 
         setTime: function(time) {
@@ -143,7 +168,7 @@ var Sprite = Sprite || {};
             if (this.paused || this.ended) {
                 return false;
             }
-            var last = this.currentIndex;
+            // var last = this.currentIndex;
             if (this.played >= this.currentEndTime) {
                 if (this.currentIndex === this.endIndex) {
                     this.onEnd && this.onEnd(timeStep);
@@ -153,6 +178,7 @@ var Sprite = Sprite || {};
                         this.currentIndex = this.startIndex;
                     } else {
                         this.ended = true;
+                        return false;
                     }
                 } else {
                     this.currentIndex++;
@@ -160,13 +186,17 @@ var Sprite = Sprite || {};
                 }
             } else {
                 this.played += timeStep;
+                return false;
             }
 
-            this.changed = last !== this.currentIndex;
-            if (this.changed) {
-                this.setFrame(this.currentIndex);
-            }
-            return this.changed;
+            // if (this.changed = last !== this.currentIndex) {
+            //     this.changeFrame(this.currentIndex);
+            //     return true;
+            // }
+            // return false;
+
+            this.changeFrame(this.currentIndex);
+            return this.changed = true;
         },
 
         onEnd: null,

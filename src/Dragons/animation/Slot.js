@@ -69,7 +69,7 @@ var Dragons = Dragons || {};
             var info = this.getFrameTweenInfo(frameIndex);
             var displayIndex = this.baseSlot.displayIndex || 0;
             var alpha = 1;
-            if (info) {
+            if (info && info.prevFrame) {
                 displayIndex = info.prevFrame.displayIndex || 0;
                 if (displayIndex < 0) {
                     // console.log(info.prevFrame.rawData)

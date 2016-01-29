@@ -33,6 +33,8 @@ var Dragons = Dragons || {};
         skeleton: null,
         rawData: null,
 
+        minDuration: 0.11,
+
         init: function() {
             this.setRawData(this.rawData);
             this.initAttributes([
@@ -64,7 +66,7 @@ var Dragons = Dragons || {};
                 });
                 frame.init();
                 frame.startIndex = startIndex;
-                startIndex = frame.endIndex = (frame.duration || 0.11) + startIndex;
+                startIndex = frame.endIndex = (frame.duration || Me.minDuration) + startIndex;
                 Me.frames.push(frame);
             });
         },
@@ -117,87 +119,106 @@ var Dragons = Dragons || {};
             });
         },
 
-        getAnimationData: function(duration, FPS, invert) {
+        getMainFrame: function(index, startIndex) {
+            startIndex = startIndex || 0;
+            var keyFrame = null;
+            for (var i = startIndex, len = this.frames.length; i < len; i++) {
+                var frame = this.frames[i];
+                // if (frame.startIndex <= index && index < frame.endIndex) {
+                if (frame.startIndex <= index) {
+                    keyFrame = frame;
+                    break;
+                }
+            }
+            return keyFrame;
+        },
+
+        // options : inverse, scale, allowSkipFrame, skinName ...
+        getAnimationData: function(duration, FPS, options) {
+            options = options || {};
+            var inverse = options.inverse || false;
+            var scaleX = options.scaleX || options.scale || 1;
+            var scaleY = options.scaleY || options.scale || scaleX;
+            var allowSkipFrame = options.allowSkipFrame || false;
+            var skinName = options.skinName || "";
+
             var frameCount = FPS * duration / 1000;
             var timeStep = duration / frameCount;
             var frameStep = this.duration / frameCount;
-            var frameIndex = 0,
+            var frameIndexFloat = 0,
                 time = 0;
             var frames = [];
+            var mainFrameStart = 0;
             for (var i = 0; i < frameCount; i++) {
-                this.prepareFrame(frameIndex);
+                this.prepareFrame(frameIndexFloat);
+                var mainFrame = this.getMainFrame(frameIndexFloat, mainFrameStart);
                 var frame = {
                     duration: timeStep,
                     pieces: []
                 };
+                if (mainFrame) {
+                    mainFrameStart++;
+                    frame.event = mainFrame.event;
+                    frame.action = mainFrame.action;
+                    frame.sound = mainFrame.sound;
+                }
 
-                var minX = Infinity,
-                    maxX = -Infinity;
-                var minY = Infinity,
-                    maxY = -Infinity;
+                // var minX = Infinity,
+                //     maxX = -Infinity;
+                // var minY = Infinity,
+                //     maxY = -Infinity;
                 this.slots.forEach(function(slot) {
-                    var slotFrame = slot.getPlayFrame(frameIndex);
+                    var slotFrame = slot.getPlayFrame(frameIndexFloat);
                     if (!slotFrame) {
                         return;
                     }
+
                     var piece = {
                         displayIndex: slotFrame.displayIndex,
                         zIndex: slotFrame.slotZ,
+                        slotName: slot.name,
                         imgName: slotFrame.imgName,
                         alpha: slotFrame.alpha,
                         matrix: slotFrame.matrix,
                         ox: slotFrame.ox,
                         oy: slotFrame.oy,
                     };
+
+                    piece.ox *= scaleX;
+                    piece.oy *= scaleY;
+                    piece.matrix.tx *= scaleX;
+                    piece.matrix.ty *= scaleY;
+
                     frame.pieces.push(piece);
                 });
                 frame.pieces.sort(function(a, b) {
                     var d = a.zIndex - b.zIndex;
                     return d == 0 ? a.displayIndex - b.displayIndex : d;
                 });
-                frame.pieces.forEach(function(p) {
-                    delete p.displayIndex;
-                    delete p.sortZ;
-                });
-                frame.aabb = [
-                    minX, minY, maxX, maxY
-                ];
+                // frame.pieces.forEach(function(p) {
+                //     delete p.displayIndex;
+                // });
+
+                // frame.aabb = [
+                //     minX, minY, maxX, maxY
+                // ];
                 frames.push(frame);
                 time += timeStep;
-                frameIndex += frameStep;
+                frameIndexFloat += frameStep;
             }
 
-            if (invert) {
+            if (inverse) {
                 for (var i = frames.length - 2; i > 0; i--) {
                     frames.push(frames[i]);
                 }
             }
             var animation = {
                 framesData: frames,
+                skinName: skinName,
                 loop: this.playTimes === 0 ? true : this.playTimes - 1,
             };
             return animation;
         },
-
-        scaleSkeleton: function(animation, scaleX, scaleY) {
-            scaleX = scaleX || 1;
-            scaleY = scaleY || scaleX;
-            var frames = animation.framesData;
-            frames.forEach(function(frame) {
-                frame.pieces.forEach(function(piece) {
-                    piece.ox *= scaleX;
-                    piece.oy *= scaleY;
-                    piece.matrix.tx *= scaleX;
-                    piece.matrix.ty *= scaleY;
-                    // piece.matrix.scale(scaleX, scaleY);
-                });
-                frame.aabb[0] *= scaleX;
-                frame.aabb[1] *= scaleY;
-                frame.aabb[2] *= scaleX;
-                frame.aabb[3] *= scaleY;
-            });
-            return animation;
-        }
 
     });
 

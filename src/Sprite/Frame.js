@@ -142,17 +142,18 @@ var Sprite = Sprite || {};
         },
 
         renderPiece: function(context, p, x, y) {
-            context.globalAlpha = p.alpha;
             var m = p.matrix;
             if (m) {
                 context.save();
+                context.globalAlpha = p.alpha;
                 context.transform(m.a, m.b, m.c, m.d, m.tx + x, m.ty + y);
                 context.drawImage(p.img, p.x, p.y, p.w, p.h, p.ox, p.oy, p.w, p.h);
                 context.restore();
             } else {
+                context.globalAlpha = p.alpha;
                 context.drawImage(p.img, p.x, p.y, p.w, p.h, x + p.ox, y + p.oy, p.w, p.h);
+                context.globalAlpha = 1;
             }
-            context.globalAlpha = 1;
         },
 
         renderPieceBorder: function(context, x, y) {
