@@ -19,6 +19,8 @@ var Dragons = Dragons || {};
         superclass: BaseElement,
 
         name: "skeletonName",
+        // TODO
+        type: null,
         frameRate: 24,
         aabb: null,
 
@@ -37,6 +39,7 @@ var Dragons = Dragons || {};
 
             this.initAttributes([
                 "name",
+                "type",
                 "frameRate",
                 "aabb"
             ]);

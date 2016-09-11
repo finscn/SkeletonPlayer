@@ -29,6 +29,8 @@ var Dragons = Dragons || {};
         frames: null,
         bones: null,
         slots: null,
+        // TODO
+        ffd: null,
 
         skeleton: null,
         rawData: null,
