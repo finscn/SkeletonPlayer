@@ -56,4 +56,4 @@ var Dragons = Dragons || {};
 
     exports.SlotFrame = SlotFrame;
 
-}(Dragons))
+}(Dragons));

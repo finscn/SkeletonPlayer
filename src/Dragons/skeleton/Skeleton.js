@@ -19,16 +19,27 @@ var Dragons = Dragons || {};
         superclass: BaseElement,
 
         name: "skeletonName",
+        frameRate: 24,
+        aabb: null,
 
         bones: null,
         slots: null,
         skinSets: null,
         animations: null,
 
+        // TODO
+        globalFrameRate: null,
+        isGlobal: null,
+
         init: function() {
             this.rawData = this.rawData || this.json.armature[0];
             this.setRawData(this.rawData);
-            this.initAttribute("name");
+
+            this.initAttributes([
+                "name",
+                "frameRate",
+                "aabb"
+            ]);
 
             this.initBones(this.rawData.bone);
 

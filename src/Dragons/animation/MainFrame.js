@@ -35,4 +35,4 @@ var Dragons = Dragons || {};
 
     exports.MainFrame = MainFrame;
 
-}(Dragons))
+}(Dragons));

@@ -100,8 +100,22 @@ var Dragons = Dragons || {};
 
         initSlots: function(slots) {
             var Me = this;
-            this.slots = [];
+            var slotMap = {};
             slots.forEach(function(slotData, idx) {
+                slotMap[slotData.name] = slotData;
+            });
+            var baseSlots = this.skeleton.slots;
+            this.slots = [];
+            baseSlots.forEach(function(slotData, idx) {
+                var name = slotData.name;
+                if (slotMap[name]) {
+                    slotData = slotMap[name];
+                } else {
+                    slotData = {
+                        name: name,
+                        frame: [],
+                    }
+                }
                 var slot = new Slot({
                     _idx: idx,
                     animation: Me,
@@ -224,4 +238,4 @@ var Dragons = Dragons || {};
 
     exports.SKAnimation = SKAnimation;
 
-}(Dragons))
+}(Dragons));
