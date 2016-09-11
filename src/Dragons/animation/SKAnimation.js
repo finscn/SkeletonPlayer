@@ -115,7 +115,6 @@ var Dragons = Dragons || {};
                 } else {
                     slotData = {
                         name: name,
-                        frame: [],
                     }
                 }
                 var slot = new Slot({

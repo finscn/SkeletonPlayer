@@ -48,8 +48,10 @@ var Dragons = Dragons || {};
         initFrames: function(frames) {
             var Me = this;
             this.frames = [];
+            if (!frames) {
+                return;
+            }
             var startIndex = 0;
-
             frames.forEach(function(frameData) {
                 var frame = new SlotFrame({
                     parent: Me,
