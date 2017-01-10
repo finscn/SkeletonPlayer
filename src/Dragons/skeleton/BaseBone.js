@@ -8,7 +8,7 @@ var Dragons = Dragons || {};
     var Utils = exports.Utils;
     var BaseElement = exports.BaseElement;
     var Composite = exports.Composite;
-    var DisplaySkin = exports.DisplaySkin;
+    var DisplayNode = exports.DisplayNode;
 
     var BaseBone = GT.Class.create({
         superclass: BaseElement,

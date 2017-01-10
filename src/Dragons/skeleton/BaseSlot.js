@@ -8,7 +8,7 @@ var Dragons = Dragons || {};
     var Utils = exports.Utils;
     var BaseElement = exports.BaseElement;
     var Composite = exports.Composite;
-    var DisplaySkin = exports.DisplaySkin;
+    var DisplayNode = exports.DisplayNode;
 
 
     var BaseSlot = GT.Class.create({
@@ -21,7 +21,7 @@ var Dragons = Dragons || {};
 
         skeleton: null,
         parent: null, // bone
-        displaySkins: null,
+        displayNodes: null,
 
         blendMode: null,
         color: null,
@@ -36,16 +36,16 @@ var Dragons = Dragons || {};
 
             this.setColorOffset(this.rawData.color);
 
-            this.displaySkinMap = {};
-            this.displaySkins = [];
+            this.displayNodeMap = {};
+            this.displayNodes = [];
 
             this.updateRelational();
         },
 
-        addDisplaySkin: function(displaySkin) {
-            if (displaySkin && !this.displaySkinMap[displaySkin.name]) {
-                this.displaySkinMap[displaySkin.name] = true;
-                this.displaySkins.push(displaySkin);
+        addDisplayNode: function(displayNode) {
+            if (displayNode && !this.displayNodeMap[displayNode.name]) {
+                this.displayNodeMap[displayNode.name] = true;
+                this.displayNodes.push(displayNode);
             }
         },
         updateRelational: function() {

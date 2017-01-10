@@ -8,7 +8,7 @@ var Dragons = Dragons || {};
     var Utils = exports.Utils;
     var BaseElement = exports.BaseElement;
     var Composite = exports.Composite;
-    var DisplaySkin = exports.DisplaySkin;
+    var DisplayNode = exports.DisplayNode;
 
     var SkinSet = GT.Class.create({
         superclass: BaseElement,
@@ -16,38 +16,38 @@ var Dragons = Dragons || {};
         name: null,
 
         skeleton: null,
-        displaySkins: null,
+        displayNodes: null,
 
         init: function() {
             this.setRawData(this.rawData);
             this.initAttribute("name");
             this.initAttribute("id", this.name);
 
-            this.initDisplaySkins(this.rawData.slot);
+            this.initDisplayNodes(this.rawData.slot);
         },
 
-        initDisplaySkins: function(slots) {
+        initDisplayNodes: function(slots) {
             var Me = this;
-            this.displaySkins = [];
-            this.displaySkinMap = {};
+            this.displayNodes = [];
+            this.displayNodeMap = {};
 
             slots.forEach(function(slotData) {
-                Me.initDisplaySkin(slotData);
+                Me.initDisplayNode(slotData);
             });
         },
 
-        initDisplaySkin: function(slotData) {
+        initDisplayNode: function(slotData) {
             var Me = this;
-            var displaySkins = slotData.display;
-            displaySkins.forEach(function(displaySkinData) {
-                var displaySkin = new DisplaySkin({
+            var displayNodes = slotData.display;
+            displayNodes.forEach(function(displayNodeData) {
+                var displayNode = new DisplayNode({
                     parentName: slotData.name,
                     skeleton: Me.skeleton,
-                    rawData: displaySkinData
+                    rawData: displayNodeData
                 });
-                displaySkin.init();
-                Me.displaySkinMap[displaySkin.name] = true;
-                Me.displaySkins.push(displaySkin);
+                displayNode.init();
+                Me.displayNodeMap[displayNode.name] = true;
+                Me.displayNodes.push(displayNode);
             });
 
         }

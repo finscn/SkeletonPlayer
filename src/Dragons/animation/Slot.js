@@ -36,9 +36,9 @@ var Dragons = Dragons || {};
             this.parent = this.animation.boneMap[this.parentName];
             this.parent.slots.push(this);
 
-            this.displaySkins = [];
-            this.baseSlot.displaySkins.forEach(function(displaySkin) {
-                Me.displaySkins.push(displaySkin.clone());
+            this.displayNodes = [];
+            this.baseSlot.displayNodes.forEach(function(displayNode) {
+                Me.displayNodes.push(displayNode.clone());
             });
 
             this.initFrames(this.rawData.frame);
@@ -83,7 +83,7 @@ var Dragons = Dragons || {};
             if (displayIndex < 0) {
                 return null;
             }
-            var skin = this.displaySkins[displayIndex];
+            var skin = this.displayNodes[displayIndex];
             var matrix = new Matrix(1, 0, 0, 1, 0, 0);
             matrix.concat(skin.matrix);
             matrix.concat(this.parent.frameMatrix[frameIndex]);

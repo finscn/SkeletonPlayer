@@ -8,7 +8,7 @@ var Dragons = Dragons || {};
     var Utils = exports.Utils;
     var BaseElement = exports.BaseElement;
     var Composite = exports.Composite;
-    var DisplaySkin = exports.DisplaySkin;
+    var DisplayNode = exports.DisplayNode;
     var SkinSet = exports.SkinSet;
 
     var BaseBone = exports.BaseBone;
@@ -31,7 +31,7 @@ var Dragons = Dragons || {};
 
         // TODO
         globalFrameRate: null,
-        isGlobal: null,
+
 
         init: function() {
             this.rawData = this.rawData || this.json.armature[0];

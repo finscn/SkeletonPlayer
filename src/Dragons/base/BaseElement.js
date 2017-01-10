@@ -17,6 +17,7 @@ var Dragons = Dragons || {
         setRawData: function(rawData) {
             this.rawData = JSON.parse(JSON.stringify(rawData));
         },
+
         initAttributes: function(options) {
             var Me = this;
             options.forEach(function(op) {

@@ -1,0 +1,27 @@
+armature
+    bone
+
+    slot
+
+    skin
+        slot
+            display
+
+    ik
+
+/////////////////
+
+    animation
+        frame
+
+    zOrder
+        frame
+
+    bone
+        frame
+
+    slot
+        frame
+
+    ffd
+        frame

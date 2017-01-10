@@ -8,12 +8,14 @@ var Dragons = Dragons || {};
     var Utils = exports.Utils;
     var BaseElement = exports.BaseElement;
 
-    var DisplaySkin = GT.Class.create({
+    var DisplayNode = GT.Class.create({
         superclass: BaseElement,
 
         name: "displayName",
-        type: "image", // image / armature
+        type: "image", // image / armature / mesh / boundingBox
         transform: null, // x, y, skX, skY, scX, scY
+
+        pivot: null, // not for type = armature
 
         parentName: null,
         skeleton: null,
@@ -36,22 +38,22 @@ var Dragons = Dragons || {};
             var parentSlot = slotMap[this.parentName];
             if (parentSlot) {
                 this.parent = parentSlot;
-                parentSlot.addDisplaySkin(this);
+                parentSlot.addDisplayNode(this);
             }
         },
 
         clone: function() {
-            var displaySkin = new DisplaySkin({
+            var displayNode = new DisplayNode({
                 parentName: this.parentName,
                 skeleton: this.skeleton,
                 rawData: this.rawData
             });
-            displaySkin.init();
-            return displaySkin;
+            displayNode.init();
+            return displayNode;
         },
 
     });
 
-    exports.DisplaySkin = DisplaySkin;
+    exports.DisplayNode = DisplayNode;
 
 }(Dragons))
