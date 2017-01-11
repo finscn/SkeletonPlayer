@@ -150,7 +150,11 @@ var Dragons = Dragons || {
             return a + (b - a) * this.easingFunction(passedPercent);
         },
         getTweenAngle: function(a, b, passedPercent, tweenRotate) {
-            tweenRotate = tweenRotate || 0;
+            if (tweenRotate) {
+                tweenRotate = tweenRotate + (tweenRotate < 0 ? 1 : -1);
+            } else {
+                tweenRotate = 0;
+            }
 
             var d = b - a;
             d = this.clampAngle(d);
